@@ -3,13 +3,10 @@
 
 //State machine is used to store gesture which could be recognized
 //It allows to recognize gesture
-class StateMachine
+class SimpleActionStateMachine
 {
 public:
-    const std::vector<Gesture> Recognize() const;
+    const std::vector<SimpleGesture> Recognize() const;
 // private:
-    std::vector<Gesture> States;
+    std::vector<SimpleGesture> States;
 };
-
-
-bool ActionsImpreciseComparsion(const AtomaryAction& Action1, const AtomaryAction& Action2);

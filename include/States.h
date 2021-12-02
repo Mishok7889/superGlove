@@ -1,46 +1,50 @@
 #pragma once
 #include <Arduino.h>
 #include <vector>
-#include <valarray>
 #include <string>
+#include <Utility.h>
 #include "Config.h"
+#include "HID.h"
 
-//Atomary action is a set of sensor values in a period of time
-struct AtomaryAction
-{
-  float firstFinger;
-  float secondFinger;
-  float thirdFinger;
-  float fourthFinger;
-  float fifthFinger;
-
-  AtomaryAction& operator+=(const AtomaryAction& Action);
-};
-
-//Gesture is a sequence of atomary actions
-class Gesture
+//Set of sensor values in a moment of time
+struct FingersPosition
 {
 public:
-  inline Gesture():Actions(0){}
-  inline Gesture(std::valarray<AtomaryAction> GestureActions):Actions(GestureActions){}
-  inline Gesture(int Length):Actions(Length){}
-  inline AtomaryAction& operator[](int Index){return Actions[Index];}
-  inline const AtomaryAction& operator[] (int Index) const{return Actions[Index];}
-  inline int size() const {return Actions.size();}
+  inline uint16_t& operator[](int i){return fingers[i];};
+  inline uint16_t operator[](int i) const{return fingers[i];};
 private:
-    std::valarray<AtomaryAction> Actions;
+  uint16_t fingers[5];
 };
-//Used to compare atomary actions with some delta
-bool ActionsImpreciseComparsion(const AtomaryAction& Action1, const AtomaryAction& Action2);
-Gesture makeGesture(int ActionsNumber, int BetweenActionsDelay = GESTURE_CHANGE_DELAY);
 
-
-void printAction(const AtomaryAction& Action);
-void printGesture(const Gesture& Gesture);
-
-inline float readAngle(const int pin, const int min, const int max)
+class Action
 {
-  return map(constrain(analogRead(pin), min, max), min, max, 0, 90); 
-}
+  virtual void doAction() = 0;
+};
 
-AtomaryAction GetCurrentState();
+//Action for sending one hid signal
+class SimpleAction : public Action
+{
+public:
+  SimpleAction()
+  virtual void doAction() override;
+private:
+  
+};
+
+class  SimpleGesture
+{
+public:
+  inline void add(const FingersPosition& pos) {gestures.push_back(pos);}
+  inline FingersPosition& operator[](int i) {return gestures[i];}
+  inline const FingersPosition operator[](int i) const {return gestures[i];}
+  inline int size() const {return gestures.size();}
+private:
+  std::vector<FingersPosition> gestures;
+};
+
+void debugPrint();
+void printPositions(const FingersPosition& fingers);
+void printGesture(const SimpleGesture& gesture);
+
+FingersPosition readFingersPosition();
+SimpleGesture recordSimpleGesture(const int numberOfActions = 3, int numberOfMeasures = 3);
