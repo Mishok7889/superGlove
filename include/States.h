@@ -4,7 +4,7 @@
 #include <string>
 #include <Utility.h>
 #include "Config.h"
-#include "HID.h"
+#include "HID-Project.h"
 
 //Set of sensor values in a moment of time
 struct FingersPosition
@@ -16,22 +16,7 @@ private:
   uint16_t fingers[5];
 };
 
-class Action
-{
-  virtual void doAction() = 0;
-};
-
-//Action for sending one hid signal
-class SimpleAction : public Action
-{
-public:
-  SimpleAction()
-  virtual void doAction() override;
-private:
-  
-};
-
-class  SimpleGesture
+class SimpleGesture
 {
 public:
   inline void add(const FingersPosition& pos) {gestures.push_back(pos);}

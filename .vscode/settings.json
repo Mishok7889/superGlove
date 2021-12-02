@@ -56,6 +56,17 @@
         "type_traits": "c",
         "typeinfo": "c",
         "utility": "c",
-        "states.h": "c"
+        "states.h": "c",
+        "bootmouse.h": "c",
+        "improvedmouse.h": "c",
+        "singleconsumer.h": "c",
+        "gamepad.h": "c",
+        "system.h": "c",
+        "consumer.h": "c",
+        "consumerapi.hpp": "c",
+        "keyboardapi.hpp": "c",
+        "improvedkeylayouts.h": "c",
+        "actions.hpp": "c",
+        "stdint.h": "c"
     }
 }

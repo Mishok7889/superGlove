@@ -2,7 +2,7 @@
 #include "string.h"
 #include "States.h"
 #include "Config.h"
-#include "HID-Project.h"
+#include "Actions.h"
 
 void setup()
 {
@@ -15,6 +15,7 @@ void loop()
 {
   // debugPrint();
 
-  printGesture(recordSimpleGesture());
-  delay(500);
+  // printGesture(recordSimpleGesture());
+  PressConsumerKeyHIDAction(ConsumerKeycode::MEDIA_PLAY_PAUSE).doAction();
+  delay(5000);
 }
