@@ -47,3 +47,5 @@ T MedianFilter<T>::median()
         return values[length/2];
     }
 }
+
+void my_delay(uint16_t delay_in_miliseconds);

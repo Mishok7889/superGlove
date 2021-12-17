@@ -1,3 +1,7 @@
-#include "States.h"
+#pragma once
+#include "Recognition.h"
 
-//constexpr SimpleActionStateMachine StateMachine();
+extern const SimpleActionStateMachine StateMachine;
+
+//Fist
+extern const FingersPosition ActivationGesture;

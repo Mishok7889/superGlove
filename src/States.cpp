@@ -1,5 +1,6 @@
 #include "Utility.h"
 #include "States.h"
+#include "Config.h"
 
 FingersPosition readFingersPosition()
 {
@@ -12,13 +13,10 @@ FingersPosition readFingersPosition()
     return res;
 }
 
+
+
 SimpleGesture recordSimpleGesture(const int numberOfActions, int numberOfMeasures)
 {
-    static MedianFilter<uint16_t> filter[]{
-                                        MedianFilter<uint16_t>(numberOfMeasures),
-                                        MedianFilter<uint16_t>(numberOfMeasures),
-                                        MedianFilter<uint16_t>(numberOfMeasures),
-                                        MedianFilter<uint16_t>(numberOfMeasures)};
     SimpleGesture res{};
 
     Serial.println("---Starting recognition---\n");
@@ -28,27 +26,9 @@ SimpleGesture recordSimpleGesture(const int numberOfActions, int numberOfMeasure
     for(int i{}; i < numberOfActions; ++i)
     {
         Serial.println("Hold your hand still");
-        delay(2000);
+        delay(1000);
 
-        for(int j{numberOfMeasures}; j > 0; --j)
-        {
-            Serial.println("+++Recognizing " + String(j) + String("+++"));
-            delay(500);
-            FingersPosition pos{readFingersPosition()};
-            for (int k{}; k < 5; ++k)
-            {
-                filter[k].push(pos[k]);
-            }
-        }
-
-        FingersPosition tmp;
-        for (int k{}; k < 5; ++k)
-        {
-            tmp[k] = filter[k].median();
-        }
-        res.add(tmp);
-        printPositions(tmp);
-        Serial.println();
+        res.add(readMedianValue(numberOfMeasures));
     }
     
     return res;
@@ -79,4 +59,32 @@ void printGesture(const SimpleGesture& gesture)
         Serial.println();
     }
     Serial.println();
+}
+
+FingersPosition readMedianValue(const int numberOfMeasures, const int readingDelay)
+{
+    static MedianFilter<uint16_t> filter[5]{
+                                        MedianFilter<uint16_t>(numberOfMeasures),
+                                        MedianFilter<uint16_t>(numberOfMeasures),
+                                        MedianFilter<uint16_t>(numberOfMeasures),
+                                        MedianFilter<uint16_t>(numberOfMeasures),
+                                        MedianFilter<uint16_t>(numberOfMeasures)};
+
+    for(int j{numberOfMeasures}; j > 0; --j)
+    {
+        Serial.println("+++Recognizing " + String(j) + String("+++"));
+        delay(500);
+        FingersPosition pos{readFingersPosition()};
+        for (int k{}; k < 5; ++k)
+        {
+            filter[k].push(pos[k]);
+        }
+    }
+
+    FingersPosition res;
+    for (int k{}; k < 5; ++k)
+    {
+        res[k] = filter[k].median();
+    }
+    return res;
 }

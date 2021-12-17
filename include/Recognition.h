@@ -7,6 +7,9 @@ class SimpleActionStateMachine
 {
 public:
     const std::vector<SimpleGesture> Recognize() const;
+    bool RecognizeActivation() const;
 // private:
     std::vector<SimpleGesture> States;
 };
+
+bool ActionsImpreciseComparsion(FingersPosition st1, FingersPosition st2);
